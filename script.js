@@ -14,6 +14,7 @@ const loader= document.getElementById('loader');
 const submit= document.getElementById('submit');
 
 document.cookie = `searchfield=Newyork`;
+document.cookie='pageNumber=1'
 
 
 function imageloaded(){
@@ -42,16 +43,23 @@ function displayPhotos(){
         imageContainer.appendChild(item)
     });
 }
+
 async function getPhotos(){
     try{
-        const ApiUrl=`https://api.unsplash.com/search/photos/?client_id=${apiKey}&count=${count}&query=${searchField}`;
+        var pageNumber = getCook('pageNumber');
+        countNumber=Number(pageNumber)
+        num=countNumber+1;
+        
+        // console.log(num,"Page Number");
+        const ApiUrl=`https://api.unsplash.com/search/photos/?client_id=${apiKey}&count=${count}&query=${searchField}&page=${pageNumber}`;
         const response = await fetch(ApiUrl)
         photosArray=await response.json();
-        console.log (photosArray);
+
+        document.cookie=`pageNumber=${String(num)}`
         displayPhotos();
     }
     catch(err){
-        // console.log("oops",err)
+        console.log("oops",err)
     }
 }
 document.getElementById('submit').addEventListener("click",()=>{   
